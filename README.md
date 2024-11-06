@@ -37,6 +37,8 @@ My overarching goal is to learn extensively about deep learning methodologies th
 
 - [x]  **Research and Understand the Topic**:
 
+## All of the information shared here is based on my current understanding of the concepts involved. I wrote this explanation to clarify my approach, but I might have misunderstood some details, and I’d be happy to make corrections if needed.
+
 ![reinforcement_agents_page-0001](https://github.com/user-attachments/assets/45afc4d4-fbdc-4357-ae10-cd0994427265)
 
 ![reinforcement_agents_page-0002](https://github.com/user-attachments/assets/9430c5de-d1c0-4fe1-b081-464d3e4477e4)
