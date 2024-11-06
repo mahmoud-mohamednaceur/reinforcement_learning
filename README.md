@@ -1,4 +1,5 @@
 # Reinforcment learning/Multiple Reinforcment Learning
+![2024-11-0612-54-33-ezgif com-video-to-gif-converter](https://github.com/user-attachments/assets/b05b11b3-69d0-4db1-88d9-f55ba0f2e24a)
 
 ### Project Objectives: Exploring Reinforcement Learning
 
@@ -105,3 +106,8 @@ My overarching goal is to learn extensively about deep learning methodologies th
 ![reinforcement_agents_page-0032](https://github.com/user-attachments/assets/41e8c19a-8940-4e43-94e6-7f148d7932d6)
 
 ![reinforcement_agents_page-0033](https://github.com/user-attachments/assets/f1dcff0f-1c8b-48a4-b349-44a9e8a8b58d)
+
+# develop project structure   : 
+<img width="435" alt="image" src="https://github.com/user-attachments/assets/6a20e7b1-dbe1-4497-8a2b-c7ae4d91e534">
+
+The ml_lib refers to a machine learning library containing all essential functions for training the agent, including a specific implementation of Deep Q-Learning. Meanwhile, the game_lib provides the necessary functions to ensure smooth game functionality. For this project, I chose the classic Snake game, where the agent will learn to maximize its score by eating as many apples as possible while avoiding collisions with walls or itself. The agent’s learning policy is based on Deep Q-Learning, and the reward system is structured as follows: +10 for eating an apple, -10 for colliding (death), and 0 for regular movement without any specific event. The agent’s performance statistics, trained model, and other outputs will be stored in my analysis output folder.
