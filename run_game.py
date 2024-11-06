@@ -76,7 +76,7 @@ if __name__ == '__main__':
             total_score_list.append(total_score)
             mean_score_list.append(mean_score)
 
-            # Store metriics in data dictionary
+            # Store metrics in data dictionary
             data['n_games'].append(step)
             data['playerScoreProRound'].append(score)
             data['playerTotalScore'].append(total_score)
