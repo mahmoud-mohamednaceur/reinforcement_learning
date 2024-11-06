@@ -96,7 +96,7 @@ if __name__ == '__main__':
             game.reset()
             agent.long_mem()
 
-    # Quit game and save the data
+    # Quit game and save  data
     pygame.quit()
     df = pd.DataFrame(data)
     df.to_csv(CSV_FILE, index=False, mode='a', header=not os.path.exists(CSV_FILE))
