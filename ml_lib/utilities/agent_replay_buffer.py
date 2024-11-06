@@ -1,4 +1,40 @@
-# Replay Buffer
+"""
+    General Purpose
+    The purpose of the replay buffer is to store past experiences (represented as state, action, reward, next state, and done flag tuples) and sample random batches of these experiences during training. By sampling from a diverse set of past experiences, the model avoids overfitting to recent experiences, allowing it to learn more stable and generalized policies.
+
+    Key Components Explained
+    Attributes:
+
+    mem_size: Maximum number of experiences the buffer can hold. Once full, new experiences overwrite the oldest ones.
+    state_mem, new_state_mem, action_mem, reward_mem, done_mem: Arrays to store components of each experience tuple:
+    state_mem: Stores the current states.
+    new_state_mem: Stores the resulting states after an action is taken.
+    action_mem: Stores the actions taken by the agent.
+    reward_mem: Stores the rewards received for each action.
+    done_mem: Stores flags indicating whether the episode has ended.
+    mem_cntr: Tracks the total number of experiences stored and is used to manage the circular buffer.
+    batch_size: Defines the number of samples (experiences) to retrieve during each training step.
+    Constructor (__init__ method):
+
+    Initializes the memory buffers for each component of an experience tuple (state, action, reward, new state, and done flag) as numpy arrays of size mem_size.
+    Sets the maximum buffer size, state dimension, number of actions, and batch size.
+    store_action Method:
+
+    Stores a single experience tuple in the replay buffer.
+    Uses mem_cntr % mem_size to store new experiences in a circular manner, where old experiences are overwritten once the buffer reaches its maximum size.
+    Increments mem_cntr to keep track of the number of stored experiences.
+    sample_mem Method:
+
+    Samples a batch of experiences from the replay buffer.
+    Randomly selects indices of experiences from the buffer up to the number of stored experiences (mem_cntr).
+    Ensures random sampling without replacement unless there are fewer experiences than batch_size, in which case it samples with replacement.
+    Returns the selected batch of states, actions, rewards, next states, and done flags, which are then used for training the Q-network.
+    Usage Context
+    In reinforcement learning, this replay buffer supports experience replay by storing past experiences and allowing random sampling during training. This approach allows the agent to learn from a broader range of experiences, reducing bias and improving learning stability. Specifically:
+
+    The agent’s Q-network can be trained by sampling batches from the replay buffer instead of using only the most recent experience.
+    This replay mechanism breaks the temporal correlation between experiences, which helps stabilize the learning process, particularly in complex environments where episodes may be long and actions can have delayed effects.
+"""
 import numpy as np
 
 class ReplayBuffer:

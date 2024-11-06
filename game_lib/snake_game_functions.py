@@ -1,47 +1,8 @@
-import pickle
-
+from game_lib.game_utilities.helper_functions import  *
 import pygame
-from enum import Enum
-from collections import namedtuple
-import os 
-import matplotlib.pyplot as plt
-import time 
-from AgentSingleSnake import Agent
-import random 
+import time
+import random
 import  numpy as np
-import pandas  as  pd 
-
-
- 
-
-# Initialize Pygame
-pygame.init()
-
-# Set the font for the game display
-font = pygame.font.SysFont("comicsans" , 50)
-
-# Enum representing directions
-class Direction(Enum):
-    RIGHT = 1
-    LEFT = 2
-    UP = 3
-    DOWN = 4
-
-# Named tuple for representing a point (x, y)
-Point = namedtuple('Point', 'x, y')
-
-# Color constants
-WHITE = (255, 255, 255)
-RED = (200, 0, 0)
-BLUE1 = (0, 0, 255)
-BLUE2 = (0, 100, 255)
-BLACK = (0, 0, 0)
-
-# Size of each block in the game grid
-BLOCK_SIZE = 20
-
-# Speed of the game (frames per second)
-SPEED = 50
 
 class SnakeGame:
     def __init__(self, w=400, h=400):
@@ -54,7 +15,8 @@ class SnakeGame:
         """
         self.w = w
         self.h = h
-        self.background_image = pygame.transform.scale(pygame.image.load("img.jpg"), (self.w, self.h))
+
+        self.background_image = pygame.transform.scale(pygame.image.load("game_lib/game_images/img.jpg"), (self.w, self.h))
 
         # Initialize display
         self.display = pygame.display.set_mode((self.w, self.h))
@@ -65,7 +27,7 @@ class SnakeGame:
 
         self.reset()
         self.colors = [
-            #"black", #to fill the screen
+            # "black", #to fill the screen
             "white",
             "red",
             "green",
@@ -88,8 +50,8 @@ class SnakeGame:
         # Start at the middle of the screen
         self.head = Point(self.w / 2, self.h / 2)
         self.snake = [self.head,
-                    Point(self.head.x - BLOCK_SIZE, self.head.y),
-                    Point(self.head.x - (2 * BLOCK_SIZE), self.head.y)]
+                      Point(self.head.x - BLOCK_SIZE, self.head.y),
+                      Point(self.head.x - (2 * BLOCK_SIZE), self.head.y)]
 
         self.score = 0
         self.frame_iteration = 0
@@ -148,8 +110,6 @@ class SnakeGame:
 
         return np.array(state, dtype=int)
 
-
-        
     def _place_food(self):
         """
         Places the food in a random location on the screen.
@@ -162,8 +122,6 @@ class SnakeGame:
         self.food = Point(x, y)
         if self.food in self.snake:
             self._place_food()
-
-
 
     def play_step(self, action):
         """
@@ -213,8 +171,6 @@ class SnakeGame:
         total_time_played = time.time() - self.start_time
         return reward, game_over, self.score, total_time_played
 
-
-    
     def is_collision(self, pt=None):
         """
         Checks if there is a collision.
@@ -237,7 +193,6 @@ class SnakeGame:
 
         return False
 
-    
     def grid(self):
         """
         Draws a grid on the display.
@@ -250,7 +205,6 @@ class SnakeGame:
                 pygame.draw.rect(self.display, "green", rect, 3)
         pygame.display.update()
 
-        
     def _update_ui(self):
         """
         Updates the UI elements on the display.
@@ -272,17 +226,16 @@ class SnakeGame:
 
         for pt in self.snake:
             pygame.draw.circle(self.display, snake_color, (pt.x + BLOCK_SIZE // 2, pt.y + BLOCK_SIZE // 2),
-                            BLOCK_SIZE // 2)
+                               BLOCK_SIZE // 2)
             pygame.draw.circle(self.display, snake_color, (pt.x + BLOCK_SIZE // 2, pt.y + BLOCK_SIZE // 2),
-                            BLOCK_SIZE // 4)
+                               BLOCK_SIZE // 4)
 
         pygame.draw.circle(self.display, 'Green', (self.food.x + BLOCK_SIZE // 2, self.food.y + BLOCK_SIZE // 2),
-                        BLOCK_SIZE // 2)
+                           BLOCK_SIZE // 2)
 
         text = font.render("Score: " + str(self.score), True, WHITE)
         self.display.blit(text, [0, 0])
         pygame.display.flip()
-
 
     def _move(self, action):
         """
@@ -321,158 +274,3 @@ class SnakeGame:
 
         self.head = Point(x, y)
 
-
-
-def Create_agent(input_dim, dim1, dim2, n_actions, lr, butch_size, mem_size, gamma):
-        """
-        Create an instance of the Agent class with specified parameters.
-
-        Parameters:
-        - input_dim: Dimension of the input state.
-        - dim1: Number of neurons in the first hidden layer.
-        - dim2: Number of neurons in the second hidden layer.
-        - n_actions: Number of possible actions.
-        - lr: Learning rate for the agent.
-        - butch_size: Batch size for training the agent's neural network.
-        - mem_size: Size of the replay memory for experience replay.
-        - gamma: Discount factor for future rewards.
-
-        Returns:
-        - Agent: An instance of the Agent class.
-        """
-        return Agent(input_dim, dim1, dim2, n_actions, lr, butch_size, mem_size, gamma)
-
-
-def plot(scores, mean_scores):
-        """
-        Plot the training scores and mean scores over time.
-
-        Parameters:
-        - scores: List of scores obtained in each game.
-        - mean_scores: List of mean scores calculated over multiple games.
-
-        """
-        plt.clf()
-        plt.title('Training...')
-        plt.xlabel('Number of Games')
-        plt.ylabel('Score')
-        plt.plot(scores, label='Scores')
-        plt.plot(mean_scores, label='Mean Scores')
-        plt.ylim(ymin=0)
-        plt.text(len(scores)-1, scores[-1], str(scores[-1]))
-        plt.text(len(mean_scores)-1, mean_scores[-1], str(mean_scores[-1]))
-        plt.legend()
-        # plt.savefig('/home/naceur/Desktop/bachelor_project/Project/SingleAiSnake/images/image.png')
-        plt.show(block=False)
-        plt.pause(.1)
-
-
-if __name__ == '__main__':
-
-        game = SnakeGame()
-        
-        agent = Create_agent(11, 256, 512, 3, 0.001, 1000, 100_000, 0.99)  
-        step = 0 
-        best_performance = 0 
-        score_list = []
-        total_score_list = []
-        mean_score_list = []
-        total = 0
-        total_time = 0 
-        
-        # Define the columns and values of the table  
-        data = {
-            'n_games': [],
-            'playerScoreProRound': [],
-            'playerTotalScore': [],
-            'PlayedTimeBeforeDeath': [],
-            'TotalPlayedTimeBeforeDeath': [],
-            'MeanScore': [],
-            'DeviationFromScore': [],
-            'TimeOverScore': [],  # Time spent for each score 
-            'TotalNumberofDeath': [],  # Total death count 
-            'TimeOverDeath': [],  # Time spent for each death 
-            'Epsilon': [],
-        }
-
-        i = 0
-
-        while i < 10000:
-            # Get old state
-            state_old = game.get_state()
-            
-            # Get move
-            final_move = agent.choose_action(state_old)
-
-            # Perform move and get new state
-            reward, done, score, total_time_played = game.play_step(final_move)
-            state_new = game.get_state()
-            
-            agent.short_mem(state_old, state_new, final_move, reward, done)
-            agent.mem.store_action(state_old, state_new, final_move, reward, done)
-            
-            screenshot_filename = f"/home/naceur/Desktop/bachelor_project/Project/SingleAiSnake/Images/screenshot{i}.png"
-            if i >= 200: 
-                pygame.image.save(game.display, screenshot_filename)
-            i += 1
-            print(f"step: {i}")
-
-            if done:
-                agent.n_games += 1
-
-                if score > best_performance:  # Check the model performance and save the model 
-                    best_performance = score  
-                    # Save the model 
-                    agent.save()
-        
-                step += 1  # Increment the number of rounds played until now 
-                print(f" the current Round : {step}")
-                total += score  # Append the score of the current round to the total score 
-                total_time += total_time_played  # Append the total time played for this round to the current total time  
-                mean_score = total / agent.n_games  # Calculate the mean score 
-                value2 = total_time / step  # Calculate the total time spent for a step 
-
-                score_list.append(score)  # Append the current score of each round to the score list to keep track and plot 
-                total_score_list.append(total)  # We need this for the variance to compare the newly added score to the previous score 
-                variance = np.var(np.array(total_score_list))  
-
-                data['n_games'].append(step) 
-                data['playerScoreProRound'].append(score)
-                data['playerTotalScore'].append(total)
-                data['PlayedTimeBeforeDeath'].append(total_time_played)
-                data['TotalPlayedTimeBeforeDeath'].append(total_time) 
-                data['MeanScore'].append(mean_score)
-                data['DeviationFromScore'].append(variance)
-                
-                if total == 0:
-                    data['TimeOverScore'].append(total_time) 
-                else: 
-                    value = total_time / total
-                    data['TimeOverScore'].append(value)
-                
-                data['TotalNumberofDeath'].append(step)  # Check
-                data['TimeOverDeath'].append(value2)  # Check
-                data['Epsilon'].append(agent.epsilon)  # Check
-
-                mean_score_list.append(mean_score)
-
-                # Plot(score_list, mean_score_list)
-                
-                game.reset()
-            
-                agent.long_mem()
-        
-        pygame.quit() 
-
-        df = pd.DataFrame(data)
-
-        df.to_csv('TrainedSingleSnakeAiExcels.csv', index=False, mode='a', header=not os.path.exists('TrainedSingleSnakeAiExcels.csv'))
-
-        file_path = "/home/naceur/Desktop/bachelor_project/Project/SingleAiSnake/Single_Ai_Snake.pkl"
-        directory = os.path.dirname(file_path)
-
-        # Create the necessary directories if they don't exist
-        os.makedirs(directory, exist_ok=True)
-
-        # Save the object using pickle.dump()
-        pickle.dump(agent, open(file_path, "wb"))

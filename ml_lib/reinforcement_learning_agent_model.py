@@ -1,8 +1,8 @@
 import torch
 import random 
 import os 
-from NetworkSingleSnake import Qnetwork
-from ReplayBufferSingleSnake import ReplayBuffer
+from ml_lib.utilities.agent_deep_neural_network import Qnetwork
+from ml_lib.utilities.agent_replay_buffer import ReplayBuffer
 
 class Agent:
     """
@@ -39,7 +39,7 @@ class Agent:
         """
         self.input_dim = input_dim
         self.fc1_dim = fc1_dim
-        self.fc2_dim = fc2_dim
+        #self.fc2_dim = fc2_dim
         self.n_actions = n_actions
         self.lr = lr
         self.butch_size = butch_size
@@ -50,7 +50,7 @@ class Agent:
 
         # Initialize replay buffer and neural network
         self.mem = ReplayBuffer(mem_size, input_dim, n_actions, butch_size)
-        self.network = Qnetwork(input_dim, fc1_dim, fc2_dim, n_actions, lr)
+        self.network = Qnetwork(input_dim, fc1_dim, n_actions, lr)
 
     def choose_action(self, state):
         """
@@ -102,14 +102,15 @@ class Agent:
         states, next_states, actions, rewards, dones, butch = self.mem.sample_mem()
         self.learn(states, next_states, actions, rewards, dones)
 
-    def save(self, file_name='TrainedSingleSnake.pth'):
+    def save(self, file_name='reinforcement_agent_trained_model.pth'):
         """
         Save the trained neural network's parameters to a file.
 
         Parameters:
         - file_name (str): Name of the file to save the parameters.
         """
-        model_folder_path = './SavedModel'
+
+        model_folder_path = '../analysis_output_folder/trained_model'
         if not os.path.exists(model_folder_path):
             os.makedirs(model_folder_path)
         file_name = os.path.join(model_folder_path, file_name)
